@@ -324,10 +324,11 @@ class Analyzer:
 
         # Since only type fields "10" and "11" are currently researched, no section can be analyzed without these.
         if tf != 10 and tf != 11:
-            print("The content of the " + str(s + 1) + ". section can't be analysed, because the type field " + str(
+            print("The content of the " + str(s + 1) + ". section can't be analysed, because method to decrypt the type field " + str(
                 tf) + " is unknown till now.")
             self.results += (
-                    "The content of the " + str(s + 1) + ". can't be analysed, because the method to decrypt this type field is unknown till now.\n\n")
+                    "The content of the " + str(s + 1) + ". section can't be analysed, because the method to decrypt this type field " + str(
+                tf) + " is unknown till now.\n\n")
             return
         else:
 
