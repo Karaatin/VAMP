@@ -312,7 +312,7 @@ class Analyzer:
             print("Type field: " + str(tf) + " / " + self.get_vmp4_section_type(tf))
             print("Offset location: " + str(offs))
             print("Size: " + str(size))
-            self.results += (str(s + 1) + ". Sektion (Type field: " + str(tf) + " / " + self.get_vmp4_section_type(tf) + "; Offset: " + str(offs) + "; Size: " +
+            self.results += (str(s + 1) + ". Section (Type field: " + str(tf) + " / " + self.get_vmp4_section_type(tf) + "; Offset: " + str(offs) + "; Size: " +
                              str(size) + "):\n")
             self.parsesec(s, tf, offs, size)
         self.presresults()
