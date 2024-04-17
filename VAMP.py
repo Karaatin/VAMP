@@ -1,7 +1,7 @@
-# Programm erstellt von Keanu Caspers | 2023 | Diese Software basiert auf dem Blog Eintrag von Cyber Fenix
-# DFIR "iOS Forensics: VMP4 File format" vom 13. September 2020. Wenn weitere type fields ergänzt werden,
-# müssen diese in der parsesec Methode der Analyzer Klasse ergänzt werden. Zu dem Zeitpunkt der Erstellung dieser
-# Software sind die Typen 10 und 11 erforscht.
+# Program created by Keanu Caspers | 2023 | This software is based on the blog entry by Cyber Fenix
+# DFIR "iOS Forensics: VMP4 File format" from September 13, 2020. If additional type fields are added,
+# these must be added to the parsesec method of the Analyzer class. At the time of creating this
+# software, types 10 and 11 are researched.
 
 import binascii
 import os
@@ -13,7 +13,7 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinterdnd2 import DND_FILES, TkinterDnD
 
 
-# Klasse Vmp4analyzer stellt das GUI.
+# Class Vmp4main represents the GUI.
 class Vmp4main:
 
     def __init__(self):
@@ -30,35 +30,34 @@ class Vmp4main:
 
         print(art)
 
-        # Hier wird eine Variable als Platzhalter vorgemerkt, welche im späteren Verlauf des Programmes weitergegeben
-        # werden soll.
+        # Here a variable is noted as a placeholder, which should be passed on later in the course of the program.
         self.file = None
-        # Erstellt das Hauptfenster mit angegebenem Titel und Maßen.
+        # Creates the main window with specified title and dimensions.
         self.mainframe = TkinterDnD.Tk()
-        self.mainframe.title("VMP4-Analyzer")
+        self.mainframe.title("VAMP")
         self.mainframe.geometry('800x200')
         self.mainframe.drop_target_register(DND_FILES)
         self.mainframe.dnd_bind('<<Drop>>', self.handle_drop)
         self.mainframe.grid_columnconfigure(0, weight=1)
 
-        # Einfache Willkommensnachricht als Label.
-        self.welcomelabel = Label(self.mainframe, text="Wählen Sie eine Datei aus, die analysiert werden soll:",
+        # Simple welcome message as a label.
+        self.welcomelabel = Label(self.mainframe, text="Choose a file to be analyzed:",
                                   font=("Arial", 16, "bold"))
         self.welcomelabel.grid(column=0, row=0, columnspan=2, pady=20)
         self.welcomelabel.grid_configure(sticky="nsew")
 
-        # Button, welcher bei Knopfdruck die Methode choosefile auslöst.
-        self.filechooser = Button(self.mainframe, text="Datei auswählen", fg="white", bg="blue",
+        # Button, which triggers the choosefile method when clicked.
+        self.filechooser = Button(self.mainframe, text="Select file", fg="white", bg="blue",
                                   command=self.choosefile)
         self.filechooser.grid(column=0, row=1, padx=(20, 0), pady=10, sticky="e")
 
-        # Eingabefeld dient der Wiedergabe des Namen der ausgewählten Datei (Eingabefeld wird nur aus Designgründen
-        # benutzt, kann aber nicht manuell beschrieben werden).
+        # Input field serves to display the name of the selected file (input field is only used for design reasons,
+        # but cannot be described manually).
         self.filename = Entry(self.mainframe, width=40, state="readonly")
         self.filename.grid(column=1, row=1, padx=(0, 20), pady=10, sticky="w")
 
-        # Button, welcher bei Knopfdruck die Methode startwork auslöst
-        start = Button(self.mainframe, text="Analyse starten", bg="green", fg="white", command=self.startwork)
+        # Button, which triggers the startwork method when clicked
+        start = Button(self.mainframe, text="Analyze", bg="green", fg="white", command=self.startwork)
         start.grid(column=0, row=2, columnspan=2, pady=20)
 
         self.mainframe.grid_rowconfigure(1, weight=1)
@@ -67,15 +66,14 @@ class Vmp4main:
 
         self.mainframe.mainloop()
 
-        # Die Methode choosefile sorgt dafür, dass sich der Dateiexplorer öffnet und eine Datei mit der *.vmp4
-        # Dateiendung ausgewählt werden kann (askopenfilename). Diese Datei wird dann in der zuvor genannten
-        # Platzhaltervariable (self.file) hinterlegt. Dabei wird außerdem mit os.path.split der Name der Datei in
-        # einem String hinterlegt; wenn eine neue Datei ausgewählt wurde, wird das anfangs erstellte "Eingabefeld"
-        # wieder beschreibbar, der erwähnte String hinterlegt und danach wieder unbeschreibbar gemacht. Zusätzlich
-        # wird die Beschriftung des Knopfes geändert, sollte eine neue Datei ausgewählt worden sein.
-
+        # The choosefile method opens the file explorer and allows selection of a file with the *.vmp4
+        # file extension (askopenfilename). This file is then stored in the previously mentioned
+        # placeholder variable (self.file). Additionally, with os.path.split, the name of the file is stored in
+        # a string; if a new file is selected, the initially created "input field"
+        # is made writable again, the mentioned string is stored, and then made readonly again. Additionally,
+        # the label of the button is changed if a new file has been selected.
     def choosefile(self):
-        newfile = askopenfilename(filetypes=[("Binary content", "*.bin"), ("VMP4 files", "*.vmp4")])
+        newfile = askopenfilename(filetypes=[("Files with vmp4 content", "*.bin;*.vmp4;*.vf"), ("Binary content", "*.bin"), ("VMP4 files", "*.vmp4"), ("VectorTile files", "*.vf")])
         newfilename = os.path.basename(newfile)
 
         if newfile:
@@ -85,10 +83,10 @@ class Vmp4main:
             self.filename.insert(0, newfilename)
             self.filename.configure(state="readonly")
 
-            self.filechooser.configure(text="Datei ändern")
+            self.filechooser.configure(text="Change file")
             self.file = newfile
 
-    # Die Methode handle_drop wird aufgerufen, wenn eine Datei per Drag-and-Drop hinzugefügt wird.
+    # The handle_drop method is called when a file is added via drag and drop.
     def handle_drop(self, event):
         file = event.data
         if len(file) > 0:
@@ -98,14 +96,13 @@ class Vmp4main:
             self.filename.delete(0, 'end')
             self.filename.insert(0, newfilename)
             self.filename.configure(state="readonly")
-            self.filechooser.configure(text="Datei ändern")
+            self.filechooser.configure(text="Change file")
             self.file = newfile
             print("Dropped file: " + newfilename)
 
-        # Wurde bereits eine Dateu ausgewählt, übergibt die Funkion startwork die Daten aus self.file (Daten der
-        # ausgewählten Datei) an ein Objekt der Klasse Analyzer. Sollte noch keine Datei ausgewählt worden sein,
-        # wird ein PopUp-Window mit einer Hinweismeldung angezeigt.
-
+        # If a file has already been selected, the function startwork passes the data from self.file (data of
+        # the selected file) to an object of the Analyzer class. If no file has been selected yet,
+        # a pop-up window with a warning message is displayed.
     def startwork(self):
 
         if self.file:
@@ -117,9 +114,9 @@ class Vmp4main:
         else:
 
             print("No VMP4 or bin file chosen")
-            tkinter.messagebox.showinfo("Hinweis", "Sie haben keine VMP4 oder Binary Datei ausgewählt.")
+            tkinter.messagebox.showinfo("Note", "You have not selected a file including vmp4 content.")
 
-    # Die Methode center_elements dient der automatischen Zentrierung der Elemente des Hauptfensters mainframe
+    # The center_elements method automatically centers the elements of the main window mainframe
     def center_elements(self):
         self.mainframe.update_idletasks()
         width = self.mainframe.winfo_width()
@@ -129,50 +126,48 @@ class Vmp4main:
         self.mainframe.geometry(f"{width}x{height}+{x_offset}+{y_offset}")
 
 
-# Die Klasse Analyzer ist zuständig für das dekomprimieren der ausgewählten Datei. Dazu zäht das
-# Herausarbeiten der unterschiedlichen Sektoren, als auch eine erneute Überprüfung, ob der Header der Datei
-# typisch für ein VMP4-Format ist.
+# The Analyzer class is responsible for decompressing the selected file. This includes
+# extracting the different sectors, as well as rechecking whether the file header is
+# typical for a VMP4 format.
 class Analyzer:
-    # Dem Konstruktor der Analyzer-Klasse muss ein Parameter mitgegeben werden. Hierbei handelt es sich um den
-    # Inhalt der Datei, welche im vorherigen Fenster ausgewählt wurde.
+
+        # content of the file selected in the previous window.
     def __init__(self, data, name: str):
         self.data = data
         self.name = name
 
-        # Dieser boolean stellt fest, ob bereits ein Sektor der Datei vollständig analysiert werden konnte
+        # This boolean determines whether a sector of the file could be fully analyzed
         self.analysed = False
 
-        # In diesen String werden später alle dekomprimierten Texte herein geschrieben, welche aus den Sektionen der
-        # Datei kommen, die dekomprimiert werden konnten.
+        # All decompressed texts coming from the sectors of the
+        # file, which could be decompressed, are written into this string later.
         self.results = ""
 
-        # Sections erhält im späteren Verlauf die Anzahl der Sektionen, welche die VMP4-Datei enthält
+        # Sections later receives the number of sections contained in the VMP4 file
         self.sections = 0
 
-        # Die Cache-Variable wird durch die Klasse als Zwischenspeicher für verschiedene Operationen benötigt.
+        # The cache variable is needed by the class as a temporary storage for various operations.
         self.cache = ""
 
-        # Das Array contentarray, in welchem später die einzelnen Bytes aus der zu dekomprimierenden Datei abgelegt
-        # werden.
+        # The contentarray array, in which the individual bytes from the file to be decompressed are stored later.
         self.contentarray = []
 
-        # Bytes der Datei werden in Array gespeichert (Siehe Kommentar an Methode)
+        # Bytes of the file are stored in array (See comment on method)
         self.loadcontentarray()
 
-        # Hier wird geprüft, ob ein typischer VMP4-Header in der Datei vorhanden ist. Wenn keiner vorhanden ist
-        # (Rückgabe 1 der Methode), wird eine Fehlermeldung gezeigt und das Programm beendet.
+        # Here it is checked whether a typical VMP4 header is present in the file. If none is present
+        # (return 1 of the method), an error message is displayed and the program is terminated.
         if self.checkheader() == 1:
-            tkinter.messagebox.showinfo("Fehler",
-                                        "Die ausgewählte Datei scheint nicht den standardmäßigen Header einer "
-                                        "VMP4-Datei zu enthalten. Bitte wählen Sie eine andere Datei aus, "
-                                        "um fortzufahren.")
+            tkinter.messagebox.showinfo("Error",
+                                        "The selected file does not seem to contain the standard header of a "
+                                        "VMP4 file. Please select another file to continue.")
 
-        # Liest die Anzahl der Sections der angegebenen Datei aus
+        # Reads the number of Sections of the specified file
         self.getseccount()
 
         self.readsecinfo()
 
-    # Die Methode clearcache leert die Variable "cache" und vermerkt den vorherigen Inhalt in der Konsole
+    # The clearcache method clears the "cache" variable and notes the previous content in the console
     def clearcache(self):
         if self.cache == "":
             return
@@ -180,12 +175,12 @@ class Analyzer:
             print("Cleared cache variable | " + self.cache + " |")
             self.cache = ""
 
-    # Der Cache-Speicher wird nun dazu benutzt, die ersten vier Bytes der Datei auszulesen und abzuspeichern,
-    # da dieser für den Header der Datei stehen.
-    # Jetzt wird ein standardmäßiger VMP4-Header mit den ersten vier Bytes (aus dem Cache) der Datei
-    # verglichen. Sollte der Header nicht stimmen, wird "1" zurückgegeben. Es
-    # kann sein, dass einfach nur die Endung einer Datei umbenannt wurde, jedoch handelt es sich hier bei laut
-    # Header nicht nach einer VMP4-Datei. Nach Beendigung wird der Cache geleert.
+    # The Cache memory is now used to read and store the first four bytes of the file,
+    # as this represents the header of the file.
+    # Now a standard VMP4 header is compared with the first four bytes (from the Cache) of the file
+    # If the header does not match, "1" is returned. It
+    # may be that only the extension of a file has been renamed, but according to the header, this is not a VMP4 file.
+    # After completion, the Cache is cleared.
     def checkheader(self):
         self.clearcache()
         for i in range(len(self.contentarray)):
@@ -202,9 +197,9 @@ class Analyzer:
             self.clearcache()
             return 0
 
-    # Diese Methode speichert alle Bytes der Datei einzeln in dem content-array des Objektes der Klasse Analyzer.
-    # Dazu wird die im Konstruktor angegebene Datei im "reading binary" Modus geöffnet und Byte für Byte (hex)
-    # ausgelesen und abgespeichert.
+    # This method stores all bytes of the file individually in the content-array of the Analyzer class object.
+    # For this purpose, the file specified in the constructor is opened in "reading binary" mode
+    # and read and stored byte by byte (hex).
     def loadcontentarray(self):
         data = open(self.data, "rb")
         count = 0
@@ -215,9 +210,9 @@ class Analyzer:
             byte = data.read(1)
             count += 1
 
-    # Diese Methode arbeitet die Anzahl der Sektionen der angegebenen Datei heraus. Diese stehen an der Stelle 6 und
-    # 7. Dadurch dass Little-Endian verwendet wird, muss das zweite Byte (welches eine größere Zahl interpretieren
-    # soll) außerdem mal 256 multipliziert werden.
+    # This method works out the number of sections of the specified file. These are at positions 6 and
+    # 7. Because Little-Endian is used, the second byte (which is to interpret a larger number
+    # must also be multiplied by 256.
     def getseccount(self):
         count = 0
         for i in range(6, 8, 1):
@@ -227,16 +222,63 @@ class Analyzer:
                 self.sections += int(self.contentarray[i].decode("ascii"), 16)
         print("The file has " + str(self.sections) + " sections")
 
-    # Diese Methode arbeitet die Informationen zu den einzelnen Sektoren heraus und übergibt diese Informationen
-    # jeweils an die Methode parsesec, wenn das type field des Sektors bekannt ist, erforscht wurde und deshalb
-    # dekomprimiert werden kann.
+    # This method compares a decimal_value (in this purpose the type field) to return, which vmp4 section type it is
+    def get_vmp4_section_type(self, decimal_value):
+        section_types = {
+            1: "ChapterGlobal",
+            10: "Vmp4SectionType is ChapterLabels",
+            11: "Vmp4SectionType is ChapterLabelLanguages",
+            13: "Vmp4SectionType is ChapterLabelLocalizations2",
+            20: "Vmp4SectionType is ChapterVertices",
+            30: "Vmp4SectionType is ChapterPointFeatures",
+            31: "Vmp4SectionType is ChapterLineFeatures",
+            32: "Vmp4SectionType is ChapterPolygonFeatures",
+            33: "Vmp4SectionType is ChapterBuildingFeatures",
+            34: "Vmp4SectionType is ChapterCoastlineFeatures",
+            38: "Vmp4SectionType is ChapterWrappingCoastlineFeatures",
+            39: "Vmp4SectionType is ChapterBuildingMeshes",
+            51: "Vmp4SectionType is ChapterLinePointCharacteristics",
+            52: "Vmp4SectionType is ChapterPolygonPointCharacteristics",
+            55: "Vmp4SectionType is ChapterPolygonPointLabelPositions",
+            60: "Vmp4SectionType is ChapterConnectivity",
+            80: "Vmp4SectionType is ChapterGeoIDSegments",
+            90: "Vmp4SectionType is ChapterAddressRanges",
+            93: "Vmp4SectionType is ChapterTileReferences",
+            96: "Vmp4SectionType is ChapterHighResBuildings",
+            100: "Vmp4SectionType is ChapterDebugBlob",
+            101: "Vmp4SectionType is ChapterElevationRaster",
+            102: "Vmp4SectionType is ChapterStyleAttributeRaster",
+            103: "Vmp4SectionType is ChapterDaVinciMetadata",
+            104: "Vmp4SectionType is ChapterLowResBuildings",
+            112: "Vmp4SectionType is ChapterTransitMZROverride",
+            119: "Vmp4SectionType is ChapterCoverage",
+            128: "Vmp4SectionType is ChapterTransitSystems",
+            129: "Vmp4SectionType is ChapterTransitNetwork",
+            135: "Vmp4SectionType is ChapterRoadNetwork",
+            136: "Vmp4SectionType is ChapterVenueMZROverride",
+            137: "Vmp4SectionType is ChapterVenues",
+            138: "Vmp4SectionType is ChapterStorefronts",
+            139: "Vmp4SectionType is ChapterLowResBorderBuildings",
+            140: "Vmp4SectionType is ChapterBorderBuildingMeshes",
+            141: "Vmp4SectionType is ChapterLabelPlacementMetadata",
+            142: "Vmp4SectionType is ChapterDaVinciBuildings",
+            144: "Vmp4SectionType is ChapterPointFeaturesAddendum",
+            145: "Vmp4SectionType is ChapterLinesExtended",
+            146: "Vmp4SectionType is ChapterTrafficSkeleton1",
+            147: "Vmp4SectionType is ChapterTrafficSkeleton2"
+    }
+        return section_types.get(decimal_value, "Unknown Section Type")
+
+    # This method works out the information about the individual sectors and passes this information
+    # to the method parsesec, if the type field of the sector is known, researched and therefore
+    # can be decompressed.
     def readsecinfo(self):
 
-        # Diese for-Schleife wird anhand der Anzahl von Sektoren ausgeführt
+        # This for loop is executed based on the number of sectors
         for s in range(0, self.sections):
 
-            # Da diese Daten (type field, offset location, size) pro Sektion erneut herausgefunden werden müssen,
-            # werden diese bei jedem Durchlauf dieser Schleife zurückgesetzt.
+            # Since this data (type field, offset location, size) has to be found out again per section,
+            # these are reset at each iteration of this loop.
             tf = 0
             offs = 0
             size = 0
@@ -244,61 +286,60 @@ class Analyzer:
             count = 1
             print("Reading information bytes of " + str(s + 1) + ". section:")
 
-            # Diese for-Schleife geht immer die 10 Bytes des jeweiligen Sektors durch
+            # This for loop always goes through the 10 bytes of the respective sector
             for i in range((8 + 10 * s), (8 + 10 * s) + 10):
                 print("Checking " + str(i) + ". byte | ", end="")
                 print(str(self.contentarray[i]) + " |")
 
-                # Hier muss beachtet werden, dass vmp4-Dateien Sektor-Informationen mit Little-Endian abgebildet
-                # werden, weshalb mit 256^count gearbeitet werden muss
+                # Here it must be noted that vmp4 files sector information is represented with Little-Endian
+                # which is why 256^count must be worked with
 
-                # Diese if-Verzweigung dient der Überprüfung der 2 Byte "Type field"
+                # This if-branch serves to check the 2-byte "Type field"
                 if count in range(1, 3):
                     tf += int(self.contentarray[i].decode("ascii"), 16) * (256 ** (count - 1))
 
-                # Diese if-Verzweigung dient der Überprüfung der 4 Byte "offset location"
+                # This if-branch serves to check the 4-byte "offset location"
                 elif count in range(3, 7):
                     offs += int(self.contentarray[i].decode("ascii"), 16) * (256 ** (count - 3))
 
-                # Diese if-Verzweigung dient der Überprüfung der 4 Byte "size"
+                # This if-branch serves to check the 4-byte "size"
                 elif count in range(7, 11):
                     size += int(self.contentarray[i].decode("ascii"), 16) * (256 ** (count - 7))
 
                 count += 1
 
             print("Giving following information about the " + str(s + 1) + ". section to parsesec():")
-            print("Type field: " + str(tf))
+            print("Type field: " + str(tf) + " / " + self.get_vmp4_section_type(tf))
             print("Offset location: " + str(offs))
             print("Size: " + str(size))
-            self.results += (str(s + 1) + ". Sektion (Type field: " + str(tf) + "; Offset: " + str(offs) + "; Size: " +
+            self.results += (str(s + 1) + ". Sektion (Type field: " + str(tf) + " / " + self.get_vmp4_section_type(tf) + "; Offset: " + str(offs) + "; Size: " +
                              str(size) + "):\n")
             self.parsesec(s, tf, offs, size)
         self.presresults()
 
-    # Diese Methode lokalisiert und dekomprimiert bzw. "übersetzt" einzelne Sektoren, wenn die zugehörigen type field
-    # bekannt und erforscht sind.
+    # This method locates and decompresses or "translates" individual sectors, if the corresponding type field
+    # known and researched.
     def parsesec(self, s: int, tf: int, offs: int, size: int):
         seccontent = []
 
-        # Da momentan nur type field "10" und "11" erforscht sind, kann keine Sektion ohne diese analysiert werden.
+        # Since only type fields "10" and "11" are currently researched, no section can be analyzed without these.
         if tf != 10 and tf != 11:
-            print("The data of the " + str(s + 1) + ". section can't be analysed, because the type field " + str(
+            print("The content of the " + str(s + 1) + ". section can't be analysed, because the type field " + str(
                 tf) + " is unknown till now.")
             self.results += (
-                    "Der Inhalt der " + str(s + 1) + ". Sektion kann nicht analysiert werden, da der zugehörige "
-                                                     "Typ noch nicht erforscht wurde.\n\n")
+                    "The content of the " + str(s + 1) + ". can't be analysed, because the type field is unknown till now.\n\n")
             return
         else:
 
-            # Speichere die Daten der Sektion in ein weiteres Array, damit pauschalisiert werden kann.
+            # Save the data of the section in another array so that it can be generalized.
             count = 0
             for i in range(offs, offs + size):
                 seccontent.append(self.contentarray[i])
                 print("Appended hexlified byte to seccontent-array | " + str(seccontent[count]) + " |")
                 count += 1
 
-            # Wenn im ersten Byte 0 steht, folgen unkomprimierte Daten, welche nur in ASCII übersetzt werden müssen,
-            # tue dies
+            # If 0 is in the first byte, uncompressed data follows, which only needs to be translated into ASCII,
+            # do so
             if seccontent[0] == b'00':
                 for byte in seccontent:
                     ascii_char = chr(int(byte, 16))
@@ -309,23 +350,23 @@ class Analyzer:
                 self.analysed = True
                 return
 
-            # Wenn im ersten Byte 1 steht, folgen nach einem Offset von 5 (also Stelle 5 und 6) komprimierte Daten. Dann
-            # muss erneut an einem Bereich geprüft werden, womit die Daten komprimiert wurden.
+            # If 1 is in the first byte, compressed data follows after an offset of 5 (i.e. position 5 and 6). Then
+            # another area must be checked to see which data was compressed.
             elif seccontent[0] == b'01':
                 self.clearcache()
                 for i in range(5, 7):
                     self.cache = self.cache + str(seccontent[i].decode())
 
-                # Der Header "789c" steht für Zlib und muss dehalb damit dekomprimiert werden
+                # The header "789c" stands for Zlib and must therefore be decompressed with it
                 if self.cache == "789c":
                     bytestring = b''
-                    self.results += "Diese Sektion wurde mit zlib komprimiert und wird nun dekomprimiert:\n"
+                    self.results += "This section was compressed with zlib and is now being decompressed:\n"
                     print("File is compressed with zlib default compression; more info on: "
                           "'https://isc.sans.edu/forums/diary/Recognizing+ZLIB+Compression/25182/'")
                     print("Starting decompression: ")
 
-                    # Übergebe alle Bytes ab zlib-Header und dekomprimiere. Da die dekomprimierten Daten nun in utf-8
-                    # From vorliegen, müssen diese ebenfalls so decoded werden.
+                    # Hand over all bytes from the zlib header and decompress. Since the decompressed data is now in utf-8
+                    # From, these also have to be decoded accordingly.
                     for i in range(5, len(seccontent)):
                         bytestring += binascii.unhexlify(seccontent[i].decode())
                     decomp = zlib.decompress(bytes(bytestring))
@@ -335,36 +376,33 @@ class Analyzer:
                     self.analysed = True
                     return
 
-                # Bis jetzt sind andere Komprimierungstools nicht im Blog vorhanden. Bei neuen Erkenntnissen können
-                # diese durch Keanu dem Code hinzugefügt werden
+                # Until now, other compression tools are not available in the blog. With new knowledge, they can
+                # be added to the code.
                 else:
                     self.results += (
-                            "Diese Sektion ist mit einem unbekannten Tool komprimiert worden und besitzt den "
-                            "Header: " + self.cache)
+                            "This section is compressed with an unknown tool and has the header: " + self.cache)
                     print("Section is compressed with an unknown compression tool with the header: " + self.cache)
                     self.clearcache()
                 return
 
-    # Diese Methode speichert die Ergebnisse der Analyse in einer Textdatei ab.
+    # The presresults method provides the result in a textfile
     def presresults(self):
 
-        # Wenn keine einzige Sektion der Datei analysiert werden konnte, wird eine Meldung ausgegeben und das
-        # Programm beendet.
+        # If not a single section of the file could be parsed, a message is issued and the program terminates.
         if not self.analysed:
-            tkinter.messagebox.showinfo("Hinweis", "Die Datei enthält keine derzeit analysierbaren Sektionen.")
+            tkinter.messagebox.showinfo("Note", "The file does not contain any parsable sections.")
             exit()
 
         print(" \nResults: " + self.results)
 
-        save_path = asksaveasfilename(defaultextension=".txt", initialfile=(self.name + "-Analyseergebnisse.txt"))
+        save_path = asksaveasfilename(defaultextension=".txt", initialfile=(self.name + "-results.txt"))
         if save_path:
             with open(save_path, "w", encoding="utf-8") as file:
-                file.write(self.results)
+                file.write("Analysis results of " + self.name + ":\n" + self.results)
                 file.close()
         return
 
-    # Diese Methode präsentiert die Ergebnisse der Dateianalyse; wurde keine Sektion analysiert, erhält der Nutzer
-    # einen Hinweis. Sonst werden alle Ergebnisse der erfolgreich analysierten Sektoren aufgeführt.
+    # This method presents the results of the file analysis; if no section is analyzed, the user receives a hint. Otherwise, all results of the successfully analysed sectors are listed.
 
 
 Vmp4main()
