@@ -327,7 +327,7 @@ class Analyzer:
             print("The content of the " + str(s + 1) + ". section can't be analysed, because method to decrypt the type field " + str(
                 tf) + " is unknown till now.")
             self.results += (
-                    "The content of the " + str(s + 1) + ". section can't be analysed, because the method to decrypt this type field " + str(
+                    "The content of the " + str(s + 1) + ". section can't be analysed, because the method to decrypt the type field " + str(
                 tf) + " is unknown till now.\n\n")
             return
         else:
