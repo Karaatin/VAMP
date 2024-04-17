@@ -1,4 +1,4 @@
-# Programm erstellt von Keanu Caspers | LKA NRW | 2023 | Diese Software basiert auf dem Blog Eintrag von Cyber Fenix
+# Programm erstellt von Keanu Caspers | 2023 | Diese Software basiert auf dem Blog Eintrag von Cyber Fenix
 # DFIR "iOS Forensics: VMP4 File format" vom 13. September 2020. Wenn weitere type fields ergänzt werden,
 # müssen diese in der parsesec Methode der Analyzer Klasse ergänzt werden. Zu dem Zeitpunkt der Erstellung dieser
 # Software sind die Typen 10 und 11 erforscht.
