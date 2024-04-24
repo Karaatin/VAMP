@@ -225,7 +225,7 @@ class Analyzer:
     # This method compares a decimal_value (in this purpose the type field) to return, which vmp4 section type it is
     def get_vmp4_section_type(self, decimal_value):
         section_types = {
-            1: "ChapterGlobal",
+            1: "Vmp4SectionType is ChapterGlobal",
             10: "Vmp4SectionType is ChapterLabels",
             11: "Vmp4SectionType is ChapterLabelLanguages",
             13: "Vmp4SectionType is ChapterLabelLocalizations2",
