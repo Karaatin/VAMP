@@ -10,6 +10,29 @@
 
 A program (with GUI) that makes it possible to decrypt vmp4-files (Apple Maps data) and save the emerging results of the analysis in a textfile.
 
+## How to Install
+
+### Downloading the Executable
+
+You can download the `VAMP.exe` file directly from the GitHub repository or fetch it using the command line.
+
+1. **Via GitHub Web Interface**
+   - Navigate to the [VAMP Releases](https://github.com/Karaatin/VAMP/releases) page.
+   - Locate the `VAMP.exe` file and download it manually.
+
+2. **Via Command Line**
+   - Use `curl` or `wget` to download the file directly.
+
+   **Using `curl`:**
+   ```sh
+   curl -L -o VAMP.exe https://github.com/Karaatin/VAMP/releases/download/v1.0.0/VAMP_v1.0.0.exe
+   ```
+    
+   **Using `wget`:**
+   ```sh
+   wget -O VAMP.exe https://github.com/Karaatin/VAMP/releases/download/v1.0.0/VAMP_v1.0.0.exe
+   ```
+   
 ## Output of test analysis
 
 Analysis results of tile-6bb335:
@@ -50,25 +73,4 @@ The content of the 11. section can't be analysed, because the method to decrypt 
 12. Section (Type field: 38 / Vmp4SectionType is ChapterWrappingCoastlineFeatures; Offset: 39148; Size: 229):
 The content of the 12. section can't be analysed, because the method to decrypt the type field 38 is unknown till now.
 
-## How to Install
 
-### Downloading the Executable
-
-You can download the `VAMP.exe` file directly from the GitHub repository or fetch it using the command line.
-
-1. **Via GitHub Web Interface**
-   - Navigate to the [VAMP Releases](https://github.com/Karaatin/VAMP/releases) page.
-   - Locate the `VAMP.exe` file and download it manually.
-
-2. **Via Command Line**
-   - Use `curl` or `wget` to download the file directly.
-
-   **Using `curl`:**
-   ```sh
-   curl -L -o VAMP.exe https://github.com/Karaatin/VAMP/releases/download/v1.0.0/VAMP_v1.0.0.exe
-   ```
-    
-   **Using `wget`:**
-   ```sh
-   wget -O VAMP.exe https://github.com/Karaatin/VAMP/releases/download/v1.0.0/VAMP_v1.0.0.exe
-   ```
