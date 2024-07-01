@@ -8,7 +8,7 @@
   </picture>
 </p>
 
-A program (with GUI) that makes it possible to decrypt vmp4-files (Apple Maps data) and save the emerging results of the analysis in a textfile.
+A program (with GUI) that makes it possible to decrypt vmp4-files (Maps, geod, GeoServices and other Apple apps data) and save the emerging results of the analysis in a textfile.
 
 ## How to Install
 
